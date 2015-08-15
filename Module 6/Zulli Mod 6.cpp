@@ -4,6 +4,7 @@
 using namespace std;
 
 class employee {
+protected:
 	ifstream fin;
 	string firstname, lastname;
 	int id;
@@ -23,14 +24,10 @@ class employee {
 	} // findhours
 
 	// set ot rate
-	void findotrate() {
-	    ot_rate = rate * 1.5;
-	} // findotrate
+	virtual void findotrate() {}
 
 	// calculate gross pay
-	void findgrosspay() {
-	    grosspay = (base_hours * rate) + (ot_hours * ot_rate);
-	} // findgrosspay
+	virtual void findgrosspay() {}
 
 	// calculate tax amount
 	void findtaxamt() {
@@ -70,7 +67,6 @@ class employee {
 	    << setw(10) << taxrate << setw(10) << netpay
 	    << endl;
 	} // printdata
-
 public:
 	employee() {
 		taxrate = .3;
@@ -128,6 +124,9 @@ public:
 };
 
 int main() {
+	// MZ: POPULATE ARRAY
 	employee staff[6];
-    employee.printreport();
+	for (int i = 0; i < 3; i++) {
+		staff[i].
+	}
 } // MAIN
