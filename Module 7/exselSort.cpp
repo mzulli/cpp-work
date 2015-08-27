@@ -3,7 +3,7 @@ using namespace std;
 int swap(int [], int, int);
 int main() {
 	int slot[10] = {8, 3, 1, 5, 7, 10, 4, 9, 6, 2};
-	int n = 10;
+	int n = 10, i;
 	int lower, upper, sortflag, sml, scan;
 	lower = 0;
 	upper = n - 1;
@@ -12,7 +12,7 @@ int main() {
 		sml = lower;
 		sortflag = 0;
 		scan = lower + 1;
-		while (scan <= upper - lower) {
+		while (scan <= 9) {
 			if (slot[scan] > slot[scan + 1]) {
 				swap(slot, scan, scan + 1);
 				sortflag = 1;
@@ -21,11 +21,11 @@ int main() {
 			scan++;		
 		} // WHILE
 		swap(slot, lower, sml);
-		upper--;
-		lower++;	
+		upper = upper - 1;
+		lower = lower + 1;	
 	} // WHILE
 	cout << "AFTER SORT:" << endl;
-	for (int i = 0; i < n; i++) cout << slot[i] << " ";
+	for (i = 0; i < n; i++) cout << slot[i] << " ";
 	cout << endl;
 	return 0;	
 } // MAIN
