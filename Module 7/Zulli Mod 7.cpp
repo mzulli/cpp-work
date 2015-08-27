@@ -118,11 +118,8 @@ public:
 	}
 };
 
-int swap(employee *[], int, int);
-
 int main() {
 	employee empl;
-	employee *temp = NULL;
 
 	// print table header
 	empl.printheader();
@@ -178,28 +175,21 @@ int main() {
 		scan = lower + 1;
 		while (scan <= 5) {
 			if (staff[scan]->netpay > staff[scan + 1]->netpay) {
-				swap(staff, scan, scan + 1);
+				employee *temp = staff[scan];
+				staff[scan] = staff[scan + 1];
+				staff[scan + 1] = temp;
 				sortflag = 1;
 				if (staff[scan]->netpay < staff[sml]->netpay) sml = scan;
 			}
 			scan++;
 		}
-		swap(staff, lower, sml);
+		employee *temp = staff[lower];
+		staff[lower] = staff[sml];
+		staff[sml] = temp;
 		upper = upper - 1;
 		lower = lower + 1;
 	}
 
-/*	for (int i = 0; i < 5; i++) {
-		for (int j = 5; j > i; j--) {
-			if (staff[j]->netpay < staff[j-1]->netpay) {
-				employee *temp = staff[j];
-				staff[j] = staff[j-1];
-				staff[j-1] = temp;
-			}
-		}
-	}
-*/
-	// print pointer array
 	for (int i = 0; i < 6; i++) {
 		staff[i]->printdata();
 	}
@@ -211,11 +201,3 @@ int main() {
 
 	return 0;
 } // MAIN
-
-int swap(employee *staff[], int i, int j) {
-	employee *temp;
-	temp = staff[i];
-	staff[i] = staff[j];
-	staff[j] = temp;
-	return 0;
-} // SWAP
