@@ -6,41 +6,41 @@ using namespace std;
 class Employee {
 public:
 	ifstream fin;
-	string firstname, lastname;
+	string firstName, lastName;
 	int id;
-	float hours, base_hours, ot_hours, rate, ot_rate, grosspay, netpay;
-	float taxamount, taxrate;
+	float hours, baseHours, otHours, rate, otRate, grossPay, netPay;
+	float taxAmt, taxRate;
 	char status;
 
 	// set base and ot hours
-	void findhours() {
-	    base_hours = hours;
-	    ot_hours = 0;
+	void findHours() {
+	    baseHours = hours;
+	    otHours = 0;
 	        
-	    if (base_hours > 40) {
-	        ot_hours = base_hours - 40;
-	        base_hours = 40;
+	    if (baseHours > 40) {
+	        otHours = baseHours - 40;
+	        baseHours = 40;
 	    }
-	} // findhours
+	} // findHours
 
 	// set ot rate
-	virtual void findotrate() {}
+	virtual void findOtRate() {}
 
 	// calculate gross pay
-	virtual void findgrosspay() {}
+	virtual void findGrossPay() {}
 
 	// calculate tax amount
-	void findtaxamt() {
-	    taxamount = grosspay * taxrate;
-	} // findtaxamt
+	void findTaxAmt() {
+	    taxAmt = grossPay * taxRate;
+	} // findTaxAmt
 
 	// calculate net pay
-	void findnetpay() {
-	    netpay = grosspay - taxamount;
-	} // findnetpay
+	void findNetPay() {
+	    netPay = grossPay - taxAmt;
+	} // findNetPay
 
 	// print table headers
-	void printheader() {
+	void printHeader() {
 		cout 	<< setiosflags(ios::left)
 		<< "                                                  ZULLI PAYROLL"
 		<< endl
@@ -53,24 +53,24 @@ public:
 		<< "=============== =============== ======= ===== ======= "
 		<< "========= ========= ========= ========= ========= ========="
 		<< endl;	
-	} // printheader
+	} // printHeader
 
 	// print data for employee
-	void printdata() {
+	void printData() {
 	    cout	<< setprecision(2)
 	    << setiosflags(ios::showpoint | ios::fixed | ios::left)
 	    << endl
-	    << setw(16) << firstname << setw(16) << lastname
+	    << setw(16) << firstName << setw(16) << lastName
 	    << setw(8) << status << setw(6) << id
-	    << setw(8) << hours << setw(10) << ot_hours << setw(10) << rate
-	    << setw(10) << ot_rate << setw(10) << grosspay
-	    << setw(10) << taxrate << setw(10) << netpay
+	    << setw(8) << hours << setw(10) << otHours << setw(10) << rate
+	    << setw(10) << otRate << setw(10) << grossPay
+	    << setw(10) << taxRate << setw(10) << netPay
 	    << endl;
-	} // printdata
+	} // printData
 
 	Employee() {
 		fin.open("employees.in");
-		taxrate = .3;
+		taxRate = .3;
 	}
 
 	~Employee() {
@@ -81,14 +81,14 @@ public:
 class Hourly: public Employee {
 public:
 	// set ot rate
-	void findotrate() {
-		ot_rate = rate * 1.5;
-	} // findotrate
+	void findOtRate() {
+		otRate = rate * 1.5;
+	} // findOtRate
 	
 	// calculate gross pay
-	void findgrosspay() {
-		grosspay = (base_hours * rate) + (ot_hours * ot_rate);
-	} // findgrosspay
+	void findGrossPay() {
+		grossPay = (baseHours * rate) + (otHours * otRate);
+	} // findGrossPay
 
 	Hourly() {
 		// fin.open("hourly.in");
@@ -102,14 +102,14 @@ public:
 class Salary: public Employee {
 public:
 	// set ot rate
-	void findotrate() {
-	    ot_rate = rate / 52 / 40 * 1.5;
-	} // findotrate
+	void findOtRate() {
+	    otRate = rate / 52 / 40 * 1.5;
+	} // findOtRate
 
 	// calculate gross pay
-	void findgrosspay() {
-	    grosspay = rate / 52 + (ot_hours * ot_rate);
-	} // findgrosspay
+	void findGrossPay() {
+	    grossPay = rate / 52 + (otHours * otRate);
+	} // findGrossPay
 
 	Salary() {
 		// fin.open("salary.in");
@@ -121,43 +121,43 @@ public:
 };
 
 int main() {
-	Employee *empl;
+	Employee *empl = new Employee();
 	Employee *fullStaff[6];
 
 	for (int i = 0; i < 6; i++) {
-		empl->fin >> empl->firstname >> empl->lastname
+		empl->fin >> empl->firstName >> empl->lastName
 			>> empl->status >> empl->id >> empl->hours 
 			>> empl->rate;
+		empl->findHours();
+		empl->findOtRate();
+		empl->findGrossPay();
+		empl->findTaxAmt();
+		empl->findNetPay();
 		if (empl->status == 'h' || empl->status == 'H') {
-			empl = new Hourly();
+			Hourly hrly;
+			empl = &hrly;
 		}
 		else {
-			empl = new Salary();
+			Salary slry;
+			empl = &slry;
 		}
-		empl->findhours();
-		empl->findotrate();
-		empl->findgrosspay();
-		empl->findtaxamt();
-		empl->findgrosspay();
-		empl->findnetpay();
 		fullStaff[i] = empl;
 	}
 
 	// print table header
-	empl->printheader();
+	empl->printHeader();
 
 /*	// create array of hourly employees
 	hourly hrly;
 	hourly hEmp[3];
 
 	for (int i = 0; i < 3; i++) {
-		hrly.fin >> hEmp[i].firstname >> hEmp[i].lastname >> hEmp[i].status >> hEmp[i].id >> hEmp[i].hours >> hEmp[i].rate;
-		hEmp[i].findhours();
-		hEmp[i].findotrate();
-		hEmp[i].findgrosspay();
-		hEmp[i].findtaxamt();
-		hEmp[i].findgrosspay();
-		hEmp[i].findnetpay();
+		hrly.fin >> hEmp[i].firstName >> hEmp[i].lastName >> hEmp[i].status >> hEmp[i].id >> hEmp[i].hours >> hEmp[i].rate;
+		hEmp[i].findHours();
+		hEmp[i].findOtRate();
+		hEmp[i].findGrossPay();
+		hEmp[i].findTaxAmt();
+		hEmp[i].findNetPay();
 	}
 
 	// create array of salary employees
@@ -165,13 +165,12 @@ int main() {
 	salary sEmp[3];
 
 	for (int i = 0; i < 3; i++) {
-		slry.fin >> sEmp[i].firstname >> sEmp[i].lastname >> sEmp[i].status >> sEmp[i].id >> sEmp[i].hours >> sEmp[i].rate;
-		sEmp[i].findhours();
-		sEmp[i].findotrate();
-		sEmp[i].findgrosspay();
-		sEmp[i].findtaxamt();
-		sEmp[i].findgrosspay();
-		sEmp[i].findnetpay();
+		slry.fin >> sEmp[i].firstName >> sEmp[i].lastName >> sEmp[i].status >> sEmp[i].id >> sEmp[i].hours >> sEmp[i].rate;
+		sEmp[i].findHours();
+		sEmp[i].findOtRate();
+		sEmp[i].findGrossPay();
+		sEmp[i].findTaxAmt();
+		sEmp[i].findNetPay();
 	}
 */
 /*	// fill pointer array with hourly and salary employees
@@ -189,8 +188,8 @@ int main() {
 	// sort pointer array
 	for (int i = 0; i < 5; i++) {
 		for (int j = 5; j > i; j--) {
-			if (fullStaff[j]->netpay < fullStaff[j-1]->netpay) {
-				Employee* temp = fullStaff[j];
+			if (fullStaff[j]->netPay < fullStaff[j-1]->netPay) {
+				Employee *temp = fullStaff[j];
 				fullStaff[j] = fullStaff[j-1];
 				fullStaff[j-1] = temp;
 			}
@@ -199,11 +198,11 @@ int main() {
 
 	// print pointer array
 	for (int i = 0; i < 6; i++) {
-		fullStaff[i]->printdata();
+		fullStaff[i]->printData();
 	}
 
 	// print highest and lowest net
 	cout << endl;
-	cout << "LOWEST NET : $  " << fullStaff[0]->netpay << " (" << fullStaff[0]->firstname << " " << fullStaff[0]->lastname << ")" << endl;
-	cout << "HIGHEST NET: $" << fullStaff[5]->netpay << " (" << fullStaff[5]->firstname << " " << fullStaff[5]->lastname << ")" << endl;
+	cout << "LOWEST NET : $  " << fullStaff[0]->netPay << " (" << fullStaff[0]->firstName << " " << fullStaff[0]->lastName << ")" << endl;
+	cout << "HIGHEST NET: $" << fullStaff[5]->netPay << " (" << fullStaff[5]->firstName << " " << fullStaff[5]->lastName << ")" << endl;
 } // MAIN

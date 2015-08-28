@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1440715604 source:/home/mzulli/git-repos/cpp-work/Module 7/Module 7/main.cpp
+	<iostream>
+	<fstream>
+	<iomanip>
+
